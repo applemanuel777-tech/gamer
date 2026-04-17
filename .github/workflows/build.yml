@@ -18,26 +18,27 @@ jobs:
         with:
           xcode-version: '15.0'
 
-      - name: Compilar app (sin firma)
+      - name: Compilar para dispositivo real (sin firma)
         run: |
           xcodebuild \
             -project GamerBoost.xcodeproj \
             -scheme GamerBoost \
             -configuration Release \
-            -sdk iphonesimulator \
-            -destination 'generic/platform=iOS Simulator' \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             ONLY_ACTIVE_ARCH=NO \
+            VALID_ARCHS="arm64" \
             build \
-            CONFIGURATION_BUILD_DIR=./build/Release
+            CONFIGURATION_BUILD_DIR=$(pwd)/build/Release-iphoneos
         working-directory: GamerBoost
 
       - name: Crear archivo IPA
         run: |
           mkdir -p Payload
-          cp -r GamerBoost/build/Release/GamerBoost.app Payload/
+          cp -r GamerBoost/build/Release-iphoneos/GamerBoost.app Payload/
           zip -r GamerBoost.ipa Payload
           rm -rf Payload
 

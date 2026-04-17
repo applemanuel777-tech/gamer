@@ -116,13 +116,18 @@ struct ProfileView: View {
                         .padding(.horizontal)
 
                         // Info sobre la app
-                        VStack(spacing: 8) {
+                        VStack(spacing: 6) {
                             Text("GamerBoost v1.0")
                                 .font(.caption)
                                 .foregroundColor(.gray)
                             Text("Optimizador para gamers de iPhone")
                                 .font(.caption2)
                                 .foregroundColor(.gray.opacity(0.6))
+                            Text("Creado por †ᴶᴹメＭʏxᴏʀ₇⁷₇")
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .foregroundColor(.green.opacity(0.9))
+                                .padding(.top, 4)
                         }
                         .padding(.bottom, 20)
                     }

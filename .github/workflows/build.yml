@@ -1,0 +1,49 @@
+name: Build GamerBoost IPA
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Seleccionar Xcode 15
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.0'
+
+      - name: Compilar app (sin firma)
+        run: |
+          xcodebuild \
+            -project GamerBoost.xcodeproj \
+            -scheme GamerBoost \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            ONLY_ACTIVE_ARCH=NO \
+            build \
+            CONFIGURATION_BUILD_DIR=./build/Release
+        working-directory: GamerBoost
+
+      - name: Crear archivo IPA
+        run: |
+          mkdir -p Payload
+          cp -r GamerBoost/build/Release/GamerBoost.app Payload/
+          zip -r GamerBoost.ipa Payload
+          rm -rf Payload
+
+      - name: Subir IPA como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: GamerBoost-IPA
+          path: GamerBoost.ipa
+          retention-days: 30
